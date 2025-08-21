@@ -48,6 +48,6 @@
 
   services.getty.autologinUser = "test";
 
-  virtualisation.diskSize = 3 * 1024 * 1024 * 1024; # 3 GiB; NOTE: You need X GB of memory to run this
+  virtualisation.diskSize = 2 * 1024; # 2 Gb, this number is in megabytes 
 }
 
