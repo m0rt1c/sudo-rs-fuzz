@@ -66,6 +66,11 @@
       password = "test";
       isNormalUser = true;
     };
+    users."alice" = {
+      home = "/home/alice";
+      password = "alice";
+      isNormalUser = true;
+    };
     users.root = {
       password = "root";
     };
