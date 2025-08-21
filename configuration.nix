@@ -39,9 +39,12 @@
   };
 
   security.pam.services.sudo-rs.text = ''
-    # First, always allow 'test' user
-    auth    [success=1 default=ignore] pam_succeed_if.so user = test
-    auth    sufficient    pam_permit.so
+    # With this line sudo-rs pam authentication
+    # will always successed for user test
+    # simulating a user knowing thier own password 
+    # otherwise the fuzzer will hang with the password input
+    # if it finds a sudoers file that allows test to run `sudo -l`
+    auth sufficient pam_succeed_if.so use_uid user = test
 
     # Then include normal login auth
     auth      include login
