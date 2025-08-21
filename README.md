@@ -4,10 +4,11 @@
 1. Create the vm `./init_vm.sh`
 1. Manually start it with `./run_vm.sh` or `./result/bin/run-nixos-vm -display none -serial mon:stdio -enable-kvm -cpu host -m 4G`
 
-### Building the fuzzer target (from inside the VM)
+## Building the fuzzer target (from inside the VM)
 
 1. `git clone https://github.com/m0rt1c/sudo-rs-fuzz`
 1. cd `sudo-rs-fuzz` 
+1. `rustup default stable`
 1. `cargo install cargo-afl`
 1. `cargo afl build`
 
