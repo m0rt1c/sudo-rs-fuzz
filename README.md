@@ -4,31 +4,39 @@
 1. Create the vm `./init_vm.sh`
 1. Manually start it with `./run_vm.sh` or `./result/bin/run-nixos-vm -display none -serial mon:stdio -enable-kvm -cpu host -m 4G`
 
+### Leaving the VM
+
+Login as root and run `poweroff`
+
 ## Building the fuzzer target (from inside the VM)
 
-1. `git clone https://github.com/m0rt1c/sudo-rs-fuzz`
+1. `git clone https://github.com/m0rt1c/sudo-rs-fuzz --depth 1`
 1. cd `sudo-rs-fuzz` 
 1. `rustup default stable`
 1. `cargo install cargo-afl`
-1. `cargo afl build`
+1. `RUSTFLAGS="-L /run/current-system/sw/lib" AFL_LLVM_CMPLOG=1 cargo afl build`
+1.  Login as root and run `echo core | tee /proc/sys/kernel/core_pattern`
 
 ## Setup
 
 You must:
 
 1. to run this target with a user that is not in any sudoers rule
-1. `chmod u+s` and `chown root:root` `./target/debug/fuzz_sudo` before running (and after every build) 
+1. Login as root to `chmod u+s` and `chown root:root` `./target/debug/fuzz_sudo` before running (and after every build) 
 1. run this in a VM to not break your system
 1. have an entry in `/etc/sudoers` that says `#includedir /root`, we will write a file with fuzzed rules to `/root/additional.sudoers`
 1. run only one fuzzer instance, more will write on the same file an break everything
 
 ## Fuzzing commands
 
+I suggest to run it in a `tmux` shell
+
 ```
 cargo afl fuzz -i in -o out ./target/debug/fuzz_sudo -l
 ```
 
-Like this we can fuzz the `-l` option of sudo
+Like this we can fuzz the `-l` option of sudo.
+The important part here is that if the user is not in sudoers `sudo-rs` -l will just qiut immeddiatly after parsing `/etc/sudoers` and judegin the policies for user `test`.
 
 ## Todo
 
