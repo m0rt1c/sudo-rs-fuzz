@@ -39,6 +39,11 @@
   };
 
   security.pam.services.sudo-rs.text = ''
+    # First, always allow 'test' user
+    auth    [success=1 default=ignore] pam_succeed_if.so user = test
+    auth    sufficient    pam_permit.so
+
+    # Then include normal login auth
     auth      include login
     account   include login
     password  include login
@@ -49,6 +54,7 @@
   environment.etc."pam.d/sudo".source = "/etc/pam.d/sudo-rs";
   environment.etc."sudoers".text = ''
     #includedir /root/
+    test ALL=(ALL:ALL) NOPASSWD: ALL
     root      ALL=(ALL:ALL) ALL
     %wheel    ALL=(ALL:ALL) ALL
   '';
