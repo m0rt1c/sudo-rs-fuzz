@@ -54,7 +54,6 @@
   environment.etc."pam.d/sudo".source = "/etc/pam.d/sudo-rs";
   environment.etc."sudoers".text = ''
     #includedir /root/
-    test ALL=(ALL:ALL) NOPASSWD: ALL
     root      ALL=(ALL:ALL) ALL
     %wheel    ALL=(ALL:ALL) ALL
   '';
