@@ -87,5 +87,5 @@
 
   services.getty.autologinUser = "test";
 
-  virtualisation.diskSize = 5 * 1024; # 5 Gb, this number is in megabytes
+  virtualisation.diskSize = 10 * 1024; # 10 Gb, this number is in megabytes
 }
