@@ -2,7 +2,7 @@
   nix.nixPath = [ "nixpkgs=${builtins.storePath <nixpkgs>}" ];
 
   environment = {
-    systemPackages = with pkgs; [ cargo rustup rustc git tmux sudo-rs vim openssl ];
+    systemPackages = with pkgs; [ cargo rustup rustc gcc git tmux sudo-rs vim openssl ];
   };
 
   security.sudo.enable = false;
@@ -48,6 +48,6 @@
 
   services.getty.autologinUser = "test";
 
-  virtualisation.diskSize = 2 * 1024; # 2 Gb, this number is in megabytes 
+  virtualisation.diskSize = 5 * 1024; # 5 Gb, this number is in megabytes 
 }
 
