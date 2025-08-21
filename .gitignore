@@ -1,2 +1,10 @@
-/target
-/out
+# Rust build outputs
+target
+
+# Fuzzer output
+out/*
+!out/.gitkeep
+
+# VM disk and build
+result
+nixos.qcow2
