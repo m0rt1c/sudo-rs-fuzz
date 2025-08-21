@@ -6,7 +6,7 @@ use std::{fs::File, io::Write};
 
 fn main() {
     fuzz!(|data: &[u8]| {
-        let path = "/root/additional.sudoers";
+        let path = "/root/additional";
         if let Ok(mut output) = File::create(path) {
             if let Ok(s) = std::str::from_utf8(data) {
                 match write!(output, "{}", s) {
