@@ -6,7 +6,7 @@
 
 ### Building the fuzzer target (from inside the VM)
 
-1. git clone this repo
+1. `git clone https://github.com/m0rt1c/sudo-rs-fuzz`
 1. cd `sudo-rs-fuzz` 
 1. `cargo install cargo-afl`
 1. `cargo afl build`
