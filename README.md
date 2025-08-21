@@ -38,6 +38,14 @@ cargo afl fuzz -i in -o out ./target/debug/fuzz_sudo -l
 Like this we can fuzz the `-l` option of sudo.
 The important part here is that if the user is not in sudoers `sudo-rs` -l will just qiut immeddiatly after parsing `/etc/sudoers` and judegin the policies for user `test`.
 
+### Test crash
+
+To test a crash see the following command. What this setup is looking for is any sudoers file that will allow the user `test` to run any command with sudo. Note, among them there will be legitimate files but we might able to catch parsing error too.
+
+```bash
+echo 'test ALL=(ALL:ALL) ALL' | ./target/debug/fuzz_sudo -l
+```
+
 ## Todo
 
 1. We could fuzz env vars too by setting them with `std::env:set_var`
