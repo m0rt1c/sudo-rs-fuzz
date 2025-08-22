@@ -65,11 +65,13 @@
 
   users = {
     users."test" = {
+      uid = 1000;
       home = "/home/test";
       password = "test";
       isNormalUser = true;
     };
     users."alice" = {
+      uid = 1001;
       home = "/home/alice";
       password = "alice";
       isNormalUser = true;
