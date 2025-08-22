@@ -82,6 +82,11 @@
 
   };
 
+  fileSystems."/" = {
+    device = "/dev/disk/by-label/nixos";
+    fsType = "btrfs";
+  };
+
   # sudo-rs searches zoneinfo in some paths but not in /etc/zoneinfo
   # but nixos has it only in /etc/zoneinfo and /etc/staic/zoneinfo
   # so we add a symlink
