@@ -2,7 +2,8 @@
 extern crate afl;
 extern crate sudo_rs;
 
-use std::{fs::File, io::Write};
+use std::{fs::File, io::Write, path::PathBuf};
+const BASE_PATH: &'static str = "/var/run/sudo-rs/ts";
 
 fn main() {
     fuzz!(|data: &[u8]| {
@@ -14,6 +15,13 @@ fn main() {
                         sudo_rs::sudo_main();
                         unsafe {
                             let uid = libc::getuid();
+                
+                            // a succeful login will create a session file
+                            // that might create false positives
+                            let mut path = PathBuf::from(BASE_PATH);
+                            path.push(uid.to_string());
+                            let _ = std::fs::remove_file(path);
+
                             panic!("User passed after sudo -l {}", uid);
                         }
                     }
