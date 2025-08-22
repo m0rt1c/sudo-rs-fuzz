@@ -50,4 +50,5 @@ echo 'test ALL=(ALL:ALL) ALL' | ./target/debug/fuzz_sudo -l
 
 1. We could fuzz env vars too by setting them with `std::env:set_var`
 1. Since this is run with `suid` and owned by `root` we could change user properties too (e.g. name, home path)
+1. Share out folder with host
 
