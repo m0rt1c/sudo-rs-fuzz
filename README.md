@@ -25,30 +25,30 @@ You must:
 1. Login as root to `chmod u+s` and `chown root:root` `./target/debug/fuzz_sudo` before running (and after every build) 
 1. run this in a VM to not break your system
 1. have an entry in `/etc/sudoers` that says `#includedir /root`, we will write a file with fuzzed rules to `/root/additional.sudoers`
-1. run only one fuzzer instance, more will write on the same file an break everything
+1. run only one fuzzer instance, more will write on the same file and make the results useless
 
 ## Fuzzing commands
 
-I suggest to run it in a `tmux` shell
+I suggest running it in a `tmux` shell
 
 ```
 cargo afl fuzz -i in -o out ./target/debug/fuzz_sudo -l
 ```
 
 Like this we can fuzz the `-l` option of sudo.
-The important part here is that if the user is not in sudoers `sudo-rs` -l will just qiut immeddiatly after parsing `/etc/sudoers` and judegin the policies for user `test`.
+The important part here is that if the user is not in sudoers `sudo-rs` -l will just quit immediately after parsing `/etc/sudoers` and judging the policies for user `test`.
 
 ### Test crash
 
-To test a crash see the following command. What this setup is looking for is any sudoers file that will allow the user `test` to run any command with sudo. Note, among them there will be legitimate files but we might able to catch parsing error too.
+To test a crash see the following command. What this setup is looking for is any sudoers file that will allow the user `test` to run any command with sudo. Note, among them there will be legitimate files, but we might be able to catch parsing error too.
 
 ```bash
 echo 'test ALL=(ALL:ALL) ALL' | ./target/debug/fuzz_sudo -l
 ```
 
-## Todo
+## To do
 
+1. Fix inode bugs, after fuzzing for a while the fs runs out of inodes
 1. We could fuzz env vars too by setting them with `std::env:set_var`
 1. Since this is run with `suid` and owned by `root` we could change user properties too (e.g. name, home path)
 1. Share out folder with host
-
