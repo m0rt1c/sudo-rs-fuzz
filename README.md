@@ -31,8 +31,8 @@ You must:
 
 I suggest running it in a `tmux` shell
 
-```
-cargo afl fuzz -i in -o out ./target/debug/fuzz_sudo -l
+```bash
+cargo afl fuzz -a text -i in -o out ./target/debug/fuzz_sudo -l
 ```
 
 Like this we can fuzz the `-l` option of sudo.
