@@ -14,10 +14,8 @@ fn has_skip_pattern(data: &[u8]) -> bool {
             return true;
         }
         if line.starts_with(b"User_Alias") {
-            if let Ok(s) = std::str::from_utf8(line) {
-                if s.contains("ALL") {
-                    return true;
-                }
+            if line.windows(3).any(|w| w == b"ALL") {
+                return true;
             }
         }
     }
