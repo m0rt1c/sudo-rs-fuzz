@@ -1,0 +1,50 @@
+#[macro_use]
+extern crate afl;
+extern crate sudo_rs;
+
+use std::{fs::File, io::Write, path::PathBuf};
+const BASE_PATH: &'static str = "/var/run/sudo-rs/ts";
+
+fn main() {
+    fuzz!(|data: &[u8]| {
+        if let Ok(s) = std::str::from_utf8(data) {
+            for line in s.split("\n") {
+                // Rules with ALL creates a lot of false positives
+                // e.g. `User_Alias ADMINS ALL` and `ADMINS ALL=(ALL) ALL`
+                if line.starts_with("User_Alias") && s.contains("ALL") {
+                    return;
+                }
+                // Skip if it contains a rule specific for user test 
+                if line.starts_with("test ") {
+                    return;
+                }
+            }
+
+            let path = "/root/additional";
+
+            if let Ok(mut output) = File::create(path) {
+                match write!(output, "{}", s) {
+                    Ok(_) => {
+                        sudo_rs::sudo_main();
+
+                        let uid;
+                        unsafe {
+                            uid = libc::getuid();
+                        }
+
+                        // a succeful login will create a session file
+                        // that might create false positives
+                        let mut path = PathBuf::from(BASE_PATH);
+                        path.push(uid.to_string());
+                        let _ = std::fs::remove_file(path);
+
+                        panic!("User passed after sudo -l {}", uid);
+                    }
+                    Err(_) => {
+                        return;
+                    }
+                }
+            }
+        }
+    });
+}
