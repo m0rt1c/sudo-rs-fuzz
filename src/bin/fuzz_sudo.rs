@@ -7,30 +7,27 @@ const BASE_PATH: &'static str = "/var/run/sudo-rs/ts";
 
 fn main() {
     fuzz!(|data: &[u8]| {
-        if let Ok(s) = std::str::from_utf8(data) {
-            let path = "/root/additional";
+        let path = "/root/additional";
+        if let Ok(mut output) = File::create(path) {
+            match output.write_all(data) {
+                Ok(_) => {
+                    sudo_rs::sudo_main();
 
-            if let Ok(mut output) = File::create(path) {
-                match write!(output, "{}", s) {
-                    Ok(_) => {
-                        sudo_rs::sudo_main();
-
-                        let uid;
-                        unsafe {
-                            uid = libc::getuid();
-                        }
-
-                        // a succeful login will create a session file
-                        // that might create false positives
-                        let mut path = PathBuf::from(BASE_PATH);
-                        path.push(uid.to_string());
-                        let _ = std::fs::remove_file(path);
-
-                        panic!("User passed after sudo -l {}", uid);
+                    let uid;
+                    unsafe {
+                        uid = libc::getuid();
                     }
-                    Err(_) => {
-                        return;
-                    }
+
+                    // a succeful login will create a session file
+                    // that might create false positives
+                    let mut path = PathBuf::from(BASE_PATH);
+                    path.push(uid.to_string());
+                    let _ = std::fs::remove_file(path);
+
+                    panic!("User passed after sudo -l {}", uid);
+                }
+                Err(_) => {
+                    return;
                 }
             }
         }
