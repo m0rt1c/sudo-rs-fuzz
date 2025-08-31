@@ -1,6 +1,10 @@
+## Dev environment requirments
+
+1. Install [Nix](https://nixos.org/download/)
+1. Run `nix-shell` to activate the `./shell.nix`
+
 ## Creating a VM
 
-1. Install Nix
 1. Create the vm `./init_vm.sh`
 1. Manually start it with `./run_vm.sh` or `./result/bin/run-nixos-vm -display none -serial mon:stdio -enable-kvm -cpu host -m 4G`
 
