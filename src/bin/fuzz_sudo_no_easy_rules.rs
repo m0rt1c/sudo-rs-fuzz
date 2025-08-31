@@ -13,6 +13,9 @@ fn has_skip_pattern(data: &[u8]) -> bool {
         if line.starts_with(b"#include") {
             return true;
         }
+        if line.starts_with(b"@include") {
+            return true;
+        }
         if line.starts_with(b"User_Alias") {
             if line.windows(3).any(|w| w == b"ALL") {
                 return true;
