@@ -52,9 +52,6 @@ echo 'test ALL=(ALL:ALL) ALL' | ./target/debug/fuzz_sudo -l
 
 ## To do
 
-1. Fix inode bugs, after fuzzing for a while the fs runs out of inodes
-    1. Found the cause! `sudo-rs` is creating for each run a file in `/tmp/sudo-dev-[0-9]+.log` and we do not remove it
-    1. as a workaround I am starting the fuzzer in the VM in a tmux session and on another tmux session I am deleting the logs
 1. We could fuzz env vars too by setting them with `std::env:set_var`
 1. Since this is run with `suid` and owned by `root` we could change user properties too (e.g. name, home path)
 1. Share out folder with host
